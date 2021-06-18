@@ -1,7 +1,5 @@
 <template>
-  <div id="app">
-    Not founf
-  </div>
+  <div id="app">Not founf</div>
 </template>
 
 <script>
@@ -12,6 +10,6 @@ import { BPagination } from "bootstrap-vue";
 Vue.component("b-pagination", BPagination);
 
 export default {
-  name: "NotFound"
-  }
+  name: "NotFound",
+};
 </script>

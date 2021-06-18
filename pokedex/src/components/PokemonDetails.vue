@@ -205,8 +205,8 @@ export default {
           console.log(res.data.abilities);
           stats = res.data.stats;
 
-          if (id > 100) textid = `${id}`;
-          else if (id > 10) textid = `0${id}`;
+          if (id >= 100) textid = `${id}`;
+          else if (id >= 10) textid = `0${id}`;
           else textid = `00${id}`;
           this.pokemon = {
             ...this.pokemon,

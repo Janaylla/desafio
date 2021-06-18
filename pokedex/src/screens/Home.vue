@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header page="home" :onClickSearch="setPageSearch" />
-  <div>
+    <div>
       <b-sidebar
         backdrop-variant="dark"
         id="sidebar-right"
@@ -13,19 +13,19 @@
           <div class="pokedex">
             <b-list-group class="ul">
               <b-nav-item href="/pokedex">
-               <b-button
-                variant="outline-primary"
-                class="navButton"
-              > <b-icon icon="circle-square"> </b-icon>Pokedex</b-button>
+                <b-button variant="outline-primary" class="navButton">
+                  <b-icon icon="circle-square"> </b-icon>Pokedex</b-button
+                >
               </b-nav-item>
-                <b-nav-item >
-              <b-button
-              v-on:click="logout"
-                variant="outline-primary"
-                class="navButton"
-              >
-               <b-icon icon="power"></b-icon> Logout</b-button>
-                </b-nav-item>
+              <b-nav-item>
+                <b-button
+                  v-on:click="logout"
+                  variant="outline-primary"
+                  class="navButton"
+                >
+                  <b-icon icon="power"></b-icon> Logout</b-button
+                >
+              </b-nav-item>
             </b-list-group>
           </div>
         </div>
@@ -84,55 +84,59 @@ export default {
       currentPage: 1,
       perPage: 30,
       pokemons: [],
-      msg: ""
+      msg: "",
     };
   },
   methods: {
     setPage: async function (idPoke) {
-      this.msg = ""
+      this.msg = "";
       apiPokemons
         .get(
-          `/pokemon?limit=${idPoke>=0 && idPoke!=='null' ? 1:this.perPage}&offset=${idPoke>=0 && idPoke!=='null'?idPoke:(this.currentPage - 1) * 30}`
+          `/pokemon?limit=${
+            idPoke >= 0 && idPoke !== "null" ? 1 : this.perPage
+          }&offset=${
+            idPoke >= 0 && idPoke !== "null"
+              ? idPoke
+              : (this.currentPage - 1) * 30
+          }`
         )
         .then((res) => {
           this.pokemons = res.data.results;
         });
     },
     setPageSearch: async function (page, search) {
-      this.msg = ""
-      if(page === 0) this.pokemons=[];
-      
-      if(search === ""){
-        this.setPage('null');
+      this.msg = "";
+      if (page === 0) this.pokemons = [];
+
+      if (search === "") {
+        this.setPage("null");
       }
-      if(Number(search)>=0 && Number(search)<1118){
-          this.setPage(Number(search));
-      }
-      else{
-      await apiPokemons
-        .get(`/pokemon?limit=50&offset=${50 * page}}`)
-        .then((res) => {
-          const pokes = res.data.results.filter((pokemon) => {
-            return pokemon.name.includes(search.toLowerCase());
+      if (Number(search) >= 0 && Number(search) < 1118) {
+        this.setPage(Number(search));
+      } else {
+        await apiPokemons
+          .get(`/pokemon?limit=50&offset=${50 * page}}`)
+          .then((res) => {
+            const pokes = res.data.results.filter((pokemon) => {
+              return pokemon.name.includes(search.toLowerCase());
+            });
+            this.pokemons = [...this.pokemons, ...pokes];
+
+            if (this.pokemons.length >= 30) {
+              this.pokemons.slice(30);
+            } else if ((page + 1) * 50 <= 1118) {
+              this.setPageSearch(page + 1, search);
+            } else {
+              if (this.pokemons.length === 0)
+                this.msg = "Não encontramos nenhum pokemon com este nome";
+            }
           });
-          this.pokemons = [...this.pokemons,...pokes];
-         
-          if (this.pokemons.length >= 30) {
-            this.pokemons.slice(30);
-          }else if(((page + 1)*50) <= 1118) {
-            this.setPageSearch(page + 1, search);
-          }
-          else{
-            if(this.pokemons.length === 0)
-            this.msg = "Não encontramos nenhum pokemon com este nome"
-          }
-        });
-        }
+      }
     },
-    logout: function (){
-      window.localStorage.removeItem('token');
-     window.location.href = '/login'
-    }
+    logout: function () {
+      window.localStorage.removeItem("token");
+      window.location.href = "/login";
+    },
   },
   mounted() {
     this.setPage();
@@ -156,11 +160,10 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.ul *{
+.ul * {
   list-style: none;
-  
 }
-.ul li button{
+.ul li button {
   width: 100%;
 }
 </style>

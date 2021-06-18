@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header page="pokedex"/>
+    <Header page="pokedex" />
     <div>
       <b-sidebar
         backdrop-variant="dark"
@@ -75,7 +75,8 @@ export default {
         .get(`/pokedex`)
         .then((res) => {
           this.pokemons = res.data.pokemons.map((pokeName, index) => {
-          if (index === 0 && this.pokemonSelected ==="") this.pokemonSelected = pokeName;
+            if (index === 0 && this.pokemonSelected === "")
+              this.pokemonSelected = pokeName;
             return { name: pokeName };
           });
         })

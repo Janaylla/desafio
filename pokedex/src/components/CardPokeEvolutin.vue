@@ -9,7 +9,7 @@
   >
     <div>
       <b-col class="b-col">
-          <h4>{{ `${typeof(level)==="number" ?level : ''}` }}</h4>
+        <h4>{{ `${typeof level === "number" ? level : ""}` }}</h4>
         <b-card-body :title="name">
           <b-card-img
             :src="pokemon.imgUrl"
@@ -50,7 +50,7 @@ export default {
     level: {
       type: Number,
       required: false,
-    }
+    },
   },
   data() {
     return {
@@ -65,12 +65,10 @@ export default {
               .front_default || res.data.sprites.front_default;
           this.pokemon.name = this.name;
           this.selected = this.pokemon.pokemonSelected === this.pokemonSelected;
-          apiPokedeks
-            .get(`/existsPokedex/${this.name}`)
-            .then((res) => {
-              this.pokemon.pokedex = res.data.exist;
-              this.updatedPokedex();
-            });
+          apiPokedeks.get(`/existsPokedex/${this.name}`).then((res) => {
+            this.pokemon.pokedex = res.data.exist;
+            this.updatedPokedex();
+          });
         });
       },
     };

@@ -9,14 +9,10 @@
   >
     <div>
       <b-col class="b-col">
-        <b-card-body :title="name" class="b-col-tilte">
+        <b-card-body :title="'#' + textid + ' ' + name" class="b-col-tilte">
         </b-card-body>
         <div class="b-col-img">
-          <b-card-img 
-            :src="pokemon.imgUrl"
-            alt="Image"
-           
-          ></b-card-img>
+          <b-card-img :src="pokemon.imgUrl" alt="Image"></b-card-img>
         </div>
       </b-col>
     </div>
@@ -43,26 +39,30 @@ export default {
     pokemonSelected: {
       type: String,
       required: false,
-    }
+    },
   },
   data() {
     return {
       pokemon: {
         imgUrl: "",
         pokedex: false,
+        textid: "",
       },
       setPokemon: function () {
         apiPokemons.get(`/pokemon/${this.name}`).then((res) => {
           this.pokemon.imgUrl =
             res.data.sprites.versions["generation-v"]["black-white"].animated
               .front_default || res.data.sprites.front_default;
-                 this.pokemon.name = this.name;
+          this.pokemon.name = this.name;
           this.selected = this.pokemon.pokemonSelected === this.pokemonSelected;
-          apiPokedeks
-            .get(`/existsPokedex/${this.name}`)
-            .then((res) => {
-              this.pokemon.pokedex = res.data.exist;
-            });
+          const id = res.data.id;
+          if (id >= 100) this.textid = `${id}`;
+          else if (id >= 10) this.textid = `0${id}`;
+          else this.textid = `00${id}`;
+
+          apiPokedeks.get(`/existsPokedex/${this.name}`).then((res) => {
+            this.pokemon.pokedex = res.data.exist;
+          });
         });
       },
     };
@@ -90,7 +90,6 @@ export default {
 </script>
 
 <style scope>
-
 .b-col {
   width: 150px;
 }
@@ -104,16 +103,16 @@ export default {
 .overflow-hidden img {
   max-height: 100%;
 }
-.b-col-img{
+.b-col-img {
   flex-grow: 1;
   height: 200px;
   display: flex;
   align-items: center;
 }
-.b-col-tilte{
+.b-col-tilte {
   padding: 0;
 }
-.b-col-img img{
+.b-col-img img {
   max-height: 100%;
 }
 </style>
