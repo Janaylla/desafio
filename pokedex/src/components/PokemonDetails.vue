@@ -338,7 +338,7 @@ h5 {
   min-width: 60%;
   min-height: 60%;
 }
-.evolution {
+.evolution{
   display: flex;
   justify-content: center;
   width: 100%;
@@ -350,9 +350,13 @@ h5 {
   margin: 10px 0;
   flex-wrap: wrap;
   width: 90%;
+  max-width: 800px;
 }
 .stats {
   width: 100%;
+  max-width: 600px;
+  align-self: center;
+  margin: auto;
 }
 .stats div:first-child {
   display: flex;
