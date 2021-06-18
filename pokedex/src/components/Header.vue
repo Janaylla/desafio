@@ -13,10 +13,11 @@
               <b-icon icon="house-door"></b-icon>
             </b-button>
           </b-nav-item>
+          
           <div v-else></div>
 
-          <div v-if="page === 'home'">
-            <b-nav-item id="navHome">
+          <div v-if="page === 'home'" class="navHome">
+            <b-nav-item class="navHome">
               <div id="search">
                 <b-form-input
                   v-model="search"
@@ -122,12 +123,9 @@ li {
   margin: 0 10px;
 }
 @media only screen and (max-width: 600px) {
-  #navHome {
+  .navHome {
     display: flex;
     flex-wrap: nowrap;
-  }
-  .notShow {
-    display: none;
   }
 }
 </style>
