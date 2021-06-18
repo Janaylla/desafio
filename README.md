@@ -1,73 +1,25 @@
-# Desafio Front-end Multiplier
+### Pokedex
+## intruções para rodar o projeto
 
-O intuito deste teste é avaliar seus conhecimentos técnicos de front-end.
+1. Clonar o projeto para sua maquina
+2. Abrir 2 terminais
+3. Com o primeiro navegar até a pasta back e inserir o comando: npm run dev
+4. No segundo navegar até a pasta pokedex e insirir o comando: npm run server
+5. Abrie no seu navegador: http://localhost:8080/
 
-O teste consiste em utilizar a API([pokeapi v2](https://pokeapi.co/docsv2/#)) para construção de uma Pokédex.
+### Funcionalidades
 
-Este desafio deve ser feito por você em sua casa. Gaste o tempo que você quiser. Mas nos conte o tempo que levou para realizar o desafio.
+1. Pesquisar pokemon por nome ou id
+2. Capturar pokemos
+3. Ver detalhes de pokemos capturados
+4. Login e logout
 
-# Instruções de entrega do desafio
+### img
 
-1. Primeiro, faça um fork deste projeto para sua conta no Github (crie uma se você não possuir).
-2. Em seguida, implemente o projeto tal qual descrito abaixo, em seu clone local.
-3. Por fim, envie via e-mail com o link do desafio, avisando quanto tempo levou para faze-lo.
+![image](https://user-images.githubusercontent.com/77745607/122607018-49db4500-d050-11eb-9fae-7c931f865c1a.png)
+![image](https://user-images.githubusercontent.com/77745607/122607038-4fd12600-d050-11eb-93ff-0c4139920427.png)
+![image](https://user-images.githubusercontent.com/77745607/122607084-611a3280-d050-11eb-9d63-8d22ac8a7713.png)
+![image](https://user-images.githubusercontent.com/77745607/122607093-67101380-d050-11eb-94d3-41393f37c537.png)
+![image](https://user-images.githubusercontent.com/77745607/122607119-74c59900-d050-11eb-9eb7-82f442a8f1b9.png)
+![image](https://user-images.githubusercontent.com/77745607/122607138-7db66a80-d050-11eb-8eba-e6f3cfa8fde6.png)
 
-# Descrição do projeto
-
-Com esta API([pokeapi v2](https://pokeapi.co/docsv2/#)) em mãos, precisamos que você crie uma interface WEB para exibir as informações dos pokémons capturados.
-
-> Não esqueça de ler as informações da documentação da [pokeapi v2](https://pokeapi.co/docsv2/#), armazene dados em cache 
-
-**Sua aplicação DEVE:**
-
-<!-- 1. Ter um filtro para buscar os pokémons por nome ou número. -->
-*2. Adicionar ou capturar, como preferir, novos pokémons a Pokédex que a principio estará vazia.*
-*3. Listar os pokémons que foram adicionados a Pokédex.*
-4. Mostrar detalhes do personagem adicionados a Pokédex como: 
-    *- Nome*
-    - Imagem dando a opção do usuário fazer upload de sua própria imagem, substituindo a que é entregue via API
-    *- Peso*
-    *- Tamanho*
-    *- Lista de tipos*
-    *- Lista de habilidades*
-    *- Estatísticas de velocidade*
-    *- Defesa*
-    *- Ataque*
-    *- Hp*
-    *- Cada passo de sua evolução*
-    *- Ao clicar em um item da lista de tipos, mostrar todos os pokémons daquele mesmo tipo, inclusive os que ainda não estão adicionados a Pokédex*
-    *- Ao clicar em um item da lista de habilidades mostrar o `short_effect` da mesma*
-*5. Excluir os pokémons que foram adicionados a Pokédex.*
-
-**Sua aplicação web NÃO PRECISA:**
-
-1. Lidar com autenticação ou autorização (pontos extras se fizer)
-2. Não precisa estar hospedada em nenhum servidor.
-3. Lidar com APIs que não seja a recomendada pelo teste.
-4. Ser escrita usando algum framework específico (mas não há nada errado em usá-los também, use o que achar melhor).
-5. Testes unitarios (pontos extras se fizer)
-
-# Tecnologias que deve estar presentes no teste
-
-- VueJS ou Jquery
-- Bootstrap
-
-**Não necessário mas se tiver será um diferencial**
-
-- Testes Unitarios
-
-# Avaliação
-
-Seu projeto será avaliado de acordo com os seguintes critérios.
-
-1. Sua aplicação preenche os requerimentos básicos?
-2. Você documentou a maneira de configurar o ambiente e rodar sua aplicação?
-3. Você seguiu as instruções de envio do desafio?
-4. Ter uma aparência bonita
-5. Altamente responsivo
-
-Adicionalmente, tentaremos verificar sua experiência com programação funcional a partir da estrutura de seu projeto.
-
----
-
-## Boa sorte!
