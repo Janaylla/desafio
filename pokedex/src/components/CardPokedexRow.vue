@@ -1,13 +1,9 @@
 
 <template>
-<b-list-group-item class="li">
-     <img
-            :src="pokemon.imgUrl"
-            alt="Image"
-            class="rounded-0"
-          />
-     {{name}}
- </b-list-group-item>
+  <b-list-group-item :id="`list${name}`"  @click="() => setPokemonSelected(name)" :active="pokemonSelected===name" class="li"  >
+    <img :src="pokemon.imgUrl" :alt="`Image${name}`" class="rounded-0" />
+    {{ name }}
+  </b-list-group-item>
 </template>
 
 <script>
@@ -20,9 +16,13 @@ export default {
       type: String,
       required: true,
     },
-    updatedPokedex:{
+    setPokemonSelected: {
       type: Function,
-      required: false,
+      required: true,
+    },
+    pokemonSelected: {
+      type: String,
+      required: true,
     }
   },
   data() {
@@ -37,7 +37,6 @@ export default {
             res.data.sprites.versions["generation-v"][
               "black-white"
             ].animated.front_default || res.data.sprites.front_default;
-             console.log(res.data.sprites.front_default);
           apiPokedeks
             .get(`/existsPokedex/Janaylla/${this.name}`)
             .then((res) => {
@@ -57,15 +56,15 @@ export default {
 </script>
 
 <style scope>
-.li{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    text-transform: capitalize;
+.li {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-transform: capitalize;
+  cursor: pointer;
 }
-.li img{
-    height: 40px;
-    margin-right: 10px;
+.li img {
+  height: 40px;
+  margin-right: 10px;
 }
-
 </style>

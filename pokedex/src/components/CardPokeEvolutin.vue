@@ -9,15 +9,14 @@
   >
     <div>
       <b-col class="b-col">
-        <b-card-body :title="name" class="b-col-tilte">
-        </b-card-body>
-        <div class="b-col-img">
-          <b-card-img 
+          <h4>{{ `${level}` }}</h4>
+        <b-card-body :title="name">
+          <b-card-img
             :src="pokemon.imgUrl"
             alt="Image"
-           
+            class="rounded-0"
           ></b-card-img>
-        </div>
+        </b-card-body>
       </b-col>
     </div>
     <b-button
@@ -101,30 +100,24 @@ export default {
 </script>
 
 <style scope>
-
+.notShow button {
+  display: none !important;
+}
+.notShow {
+  border: solid red 1px;
+  -webkit-box-shadow: 0px 0px 10px 10px rgba(255, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 10px 10px rgba(255, 0, 0, 0.75);
+  box-shadow: 0px 0px 10px 10px rgba(255, 0, 0, 0.75);
+}
 .b-col {
   width: 150px;
 }
 .overflow-hidden {
-  height: 350px;
+  height: 250px;
   display: flex;
   flex-direction: column;
-  margin: 10px;
-  padding: 20px;
 }
-.overflow-hidden img {
-  max-height: 100%;
-}
-.b-col-img{
+.overflow-hidden > div {
   flex-grow: 1;
-  height: 200px;
-  display: flex;
-  align-items: center;
-}
-.b-col-tilte{
-  padding: 0;
-}
-.b-col-img img{
-  max-height: 100%;
 }
 </style>

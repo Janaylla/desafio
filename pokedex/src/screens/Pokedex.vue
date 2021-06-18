@@ -1,50 +1,46 @@
 <template>
   <div id="app">
     <Header />
-     <div>
-    <b-button v-b-toggle.sidebar-right>Pokedex</b-button>
-    <b-sidebar backdrop-variant="dark" id="sidebar-right" title="Pokedex" right shadow>
-      <div class="px-3 py-2">
-         <div class="pokedex">
-           <b-list-group class="ul">
-      <CardPokedexRow
-        v-for="(pokemon, index) in pokemons"
-        :key="index"
-        :name="pokemon.name"
-      />
-      </b-list-group>
-    </div>
-      </div>
-    </b-sidebar>
-  </div>
-    <div class="pokemons">
-      <CardPokedex
-        v-for="(pokemon, index) in pokemons"
-        :key="index"
-        :name="pokemon.name"
-      />
-    </div>
+    <div>
+             <b-button v-b-toggle.sidebar-right variant="outline-primary" class="buttonShowPokes">
+        <b-icon icon="menu-button-wide-fill"></b-icon> Pokemons capturados
+      </b-button>
 
-      <div class="overflow-auto" 
-        v-on:click.prevent="setPage">
-    <div >
-  
-      <b-pagination
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        size="sm"
-        align="center"
-        pills
-      ></b-pagination>
+      <b-sidebar
+        backdrop-variant="dark"
+        id="sidebar-right"
+        title="Pokedex"
+        right
+        shadow
+      >
+        <div class="px-3 py-2">
+          <div class="pokedex">
+            <b-list-group class="ul">
+              <CardPokedexRow
+                v-for="(pokemon, index) in pokemons"
+                :key="index"
+                :name="pokemon.name"
+                :setPokemonSelected="setPokemonSelected"
+                :pokemonSelected="pokemonSelected"
+              />
+            </b-list-group>
+          </div>
+        </div>
+      </b-sidebar>
     </div>
-  </div>
+    <div class="pokemon">
+      <PokemonDetails
+        :key="pokemonSelected"
+        :name="pokemonSelected"
+        :updatedPokedex="updatedPokedex"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import { apiPokedeks} from "../services/api";
+import { apiPokedeks } from "../services/api";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import { PaginationPlugin } from "bootstrap-vue";
 Vue.use(PaginationPlugin);
@@ -59,44 +55,52 @@ Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
 import Header from "../components/Header.vue";
-import CardPokedex from "../components/CardPokedex.vue";
-import CardPokedexRow from '../components/CardPokedexRow.vue';
+import PokemonDetails from "../components/PokemonDetails.vue";
+import CardPokedexRow from "../components/CardPokedexRow.vue";
 export default {
   name: "App",
   components: {
     Header,
-    CardPokedex,
+    PokemonDetails,
     CardPokedexRow,
   },
   data() {
     return {
       rows: 1,
       currentPage: 1,
-      perPage: 30,
-      pokemons: []
+      perPage: 24,
+      pokemons: [],
+      pokemonSelected: "",
     };
   },
   methods: {
-    setPokedex:async function () {
+    setPokedex: async function () {
       apiPokedeks
         .get(`pokedex/Janaylla`)
         .then((res) => {
-          console.log(res.data.pokemons)
-          this.pokemons = res.data.pokemons.map((pokeName)=>{
-            return {name: pokeName}
+          this.pokemons = res.data.pokemons.map((pokeName, index) => {
+          if (index === 0 && this.pokemonSelected ==="") this.pokemonSelected = pokeName;
+            return { name: pokeName };
           });
         })
         .catch((err) => {
           console.log(err);
         });
-    }
+    },
+    setPokemonSelected: function (name) {
+      this.pokemonSelected = name;
+    },
+    updatedPokedex: function () {
+      this.setPokedex();
+    },
   },
-  mounted(){
-    this.setPokedex()
+
+  mounted() {
+    this.setPokedex();
   },
-  update(){
-    this.setPokedex()
-  }
+  update() {
+    this.setPokedex();
+  },
 };
 </script>
 
@@ -115,5 +119,13 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+.buttonShowPokes{
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  margin: 20px;
+  background-color: white;
 }
 </style>

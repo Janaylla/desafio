@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <Header />
+     <b-button  href="/pokedex" v-b-toggle.sidebar-right variant="outline-primary" class="buttonShowPokes">
+        <b-icon icon="menu-button-wide-fill"></b-icon> Pokedex</b-button>
     <div class="pokemons">
       <CardPokemon
         v-for="(pokemon, index) in pokemons"
@@ -53,7 +55,7 @@ export default {
   data() {
     return {
       rows: 1118,
-      currentPage: 2,
+      currentPage: 1,
       perPage: 30,
       pokemons: []
     };
@@ -88,5 +90,12 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+.buttonShowPokes{
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 20px;
+  background-color: white;
 }
 </style>
