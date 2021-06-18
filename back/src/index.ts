@@ -2,7 +2,7 @@ import express, { Request, Response, Express } from 'express'
 import cors from 'cors'
 import { AddressInfo } from "net";
 import { user } from './types'
-
+import { generateToken, getData } from './generateToken';
 const app: Express = express();
 let users:user[] = [];
 
@@ -31,27 +31,52 @@ function updateArrayUsers(users: user[]): void {
 app.use(express.json());
 app.use(cors());
 
-app.put(("/user"), (req: Request, res: Response) => {
+app.post(("/singup"), (req: Request, res: Response) => {
+    updateUsers()
     const {userName, password} = req.body;
-    if(!userName && password){
+    if(!userName || !password){
         res.status(400).send("Error")
     }
     const index = users.findIndex((user:user) => {
         return user.userName === userName;
     })
-
     if(index != -1){
         res.status(400).send("Error")
     }
     users.push({
         userName, password, pokedex:[]
     })
+    const token = generateToken({userName})
     updateArrayUsers(users)
-    res.status(200).send(`Create user: ${users[users.length-1].userName}`)
-
+    res.status(200).send({token})
 })
-app.get("/existsPokedex/:userName/:pokemon", (req: Request, res: Response) => {
-    const userName = req.params.userName;
+
+app.post(("/login"), (req: Request, res: Response) => {
+    updateUsers()
+    const {userName, password} = req.body;
+    if(!userName || !password){
+        res.status(400).send("Error")
+    }
+    const index = users.findIndex((user:user) => {
+        return user.userName === userName;
+    })
+    if(index === -1){
+        res.status(400).send("Error")
+    }
+    users.push({
+        userName, password, pokedex:[]
+    })
+    const token = generateToken({userName: users[index].userName})
+    res.status(200).send({token})
+})
+app.get("/existsPokedex/:pokemon", (req: Request, res: Response) => {
+    updateUsers()
+    const token  = req.headers.authorization;
+    if(typeof(token) !== "string"){
+        res.status(400).send("Error")
+    }
+    const {userName} = getData(token as string);
+
     const pokemon = req.params.pokemon;
    if(!userName || !pokemon){
        res.status(400).send("Error")
@@ -68,24 +93,37 @@ app.get("/existsPokedex/:userName/:pokemon", (req: Request, res: Response) => {
    res.status(200).send({exist: indexPokemon !== -1})
 })
 
-app.get("/pokedex/:userName", (req: Request, res: Response) => {
-    const userName = req.params.userName;
+app.get("/pokedex", (req: Request, res: Response) => {
+    updateUsers()
+    const token  = req.headers.authorization;
+    if(typeof(token) !== "string"){
+        res.status(400).send("Error")
+    }
+    console.log("oii")
+    const {userName} = getData(token as string);
     if(!userName){
         res.status(400).send("Error")
     }
     const index = users.findIndex((user:user) => {
         return user.userName === userName;
     })
+    console.log("oii")
     if(index === -1){
         res.status(400).send("Error")
     }
-   
+    console.log("oii")
     res.status(200).send({pokemons: users[index].pokedex})
 })
 
 
-app.put("/pokedex/:userName/:pokemon", (req: Request, res: Response) => {
-    const userName = req.params.userName;
+app.put("/pokedex/:pokemon", (req: Request, res: Response) => {
+    updateUsers()
+    const token  = req.headers.authorization;
+    if(typeof(token) !== "string"){
+        res.status(400).send("Error")
+    }
+    const {userName} = getData(token as string);
+
      const pokemon = req.params.pokemon;
     if(!userName || !pokemon){
         res.status(400).send("Error")
@@ -100,13 +138,14 @@ app.put("/pokedex/:userName/:pokemon", (req: Request, res: Response) => {
         return poke === pokemon;
     })
     if(indexPokemon != -1){
-        updateArrayUsers(users)
         users[index].pokedex.splice(indexPokemon, 1)
+        updateArrayUsers(users)
         res.status(200).send("Pokemon removido")
     }
-    else{ users[index].pokedex.push(pokemon)
+    else{ 
+        users[index].pokedex.push(pokemon)
+        updateArrayUsers(users)
         res.status(200).send("Pokemon adicionado")
-
     }    
    
 })

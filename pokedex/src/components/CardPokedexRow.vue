@@ -38,7 +38,7 @@ export default {
               "black-white"
             ].animated.front_default || res.data.sprites.front_default;
           apiPokedeks
-            .get(`/existsPokedex/Janaylla/${this.name}`)
+            .get(`/existsPokedex/${this.name}`)
             .then((res) => {
               this.pokemon.pokedex = res.data.exist;
             });

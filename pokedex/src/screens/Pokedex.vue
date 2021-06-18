@@ -1,11 +1,8 @@
 <template>
   <div id="app">
-    <Header />
+    <Header page="pokedex"/>
     <div>
-             <b-button v-b-toggle.sidebar-right variant="outline-primary" class="buttonShowPokes">
-        <b-icon icon="menu-button-wide-fill"></b-icon> Pokemons capturados
-      </b-button>
-
+            
       <b-sidebar
         backdrop-variant="dark"
         id="sidebar-right"
@@ -76,7 +73,7 @@ export default {
   methods: {
     setPokedex: async function () {
       apiPokedeks
-        .get(`pokedex/Janaylla`)
+        .get(`/pokedex`)
         .then((res) => {
           this.pokemons = res.data.pokemons.map((pokeName, index) => {
           if (index === 0 && this.pokemonSelected ==="") this.pokemonSelected = pokeName;
@@ -110,6 +107,7 @@ export default {
   flex-wrap: wrap;
   display: flex;
   flex-grow: 1;
+  align-items: center;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -119,13 +117,5 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-.buttonShowPokes{
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  margin: 20px;
-  background-color: white;
 }
 </style>

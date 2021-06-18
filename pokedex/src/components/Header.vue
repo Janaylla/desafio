@@ -1,23 +1,54 @@
 
 <template>
-<div>
-  <div id="nav">
-    <b-navbar type="danger" variant="danger">
-      <b-navbar-nav>
-        <b-nav-item href="/"
-          ><b-button
-          class="homeButton"
-            variant="outline-primary"
-          >
-            <b-icon icon="house-door"></b-icon>
-          </b-button>
-        </b-nav-item>
-      </b-navbar-nav>
-    </b-navbar>
+  <div>
+    <div id="nav">
+      <b-navbar type="danger" variant="danger">
+        <b-navbar-nav class="menu">
+          <b-nav-item href="/"
+            ><b-button class="navButton" variant="outline-primary">
+              <b-icon icon="house-door"></b-icon>
+            </b-button>
+          </b-nav-item>
+          <div v-if="page === 'home'">
+            <b-nav-item>
+              <div>
+                <div id="search">
+                  <b-form-input
+                    v-model="search"
+                    placeholder="Name or ID"
+                    class="text"
+                  ></b-form-input>
+                  <b-icon icon="search" class="icon" v-on:click="() => onClickSearch(0, search)"></b-icon>
+                </div>
+              </div>
+            </b-nav-item>
+            <b-nav-item >
+              <b-button
+                variant="outline-primary"
+                class="navButton"
+                  v-b-toggle.sidebar-right
+              >
+                <b-icon icon="list"></b-icon></b-button
+              >
+            </b-nav-item>
+          </div>
+          <div v-else-if="page === 'pokedex'">
+            <b-nav-item>
+              <b-button
+                v-b-toggle.sidebar-right
+                variant="outline-primary"
+                class="navButton"
+              >
+                <b-icon icon="circle-square"></b-icon> Pokemons
+                capturados
+              </b-button>
+            </b-nav-item>
+          </div>
+        </b-navbar-nav>
+      </b-navbar>
+    </div>
+    <div id="nav-space"></div>
   </div>
-  <div id="nav-space">
-  </div>
-</div>
 </template>
 
 <script>
@@ -26,30 +57,44 @@ import "regenerator-runtime/runtime";
 import Vue from "vue";
 import { BNavbar } from "bootstrap-vue";
 Vue.component("b-navbar", BNavbar);
+import { FormInputPlugin } from "bootstrap-vue";
+Vue.use(FormInputPlugin);
 
 export default {
-  name: "HelloWorld",
+  name: "Header",
   props: {
-    msg: String,
+    page: String,
+    onClickSearch: Function,
   },
+  data(){
+    return{
+      search: ''
+    }
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#nav{
+#nav {
   position: fixed;
-  width: 100vw;
+  width: 100%;
   z-index: 1;
 }
-#nav-space{
-  height: 100px;;
+#nav-space {
+  height: 100px;
 }
-.homeButton{
+.navButton {
   background-color: white;
+  margin: 0 5px;
 }
-.homeButton:hover{
-  background-color: #0d6efd   ;
+.navButton:hover {
+  background-color: #0d6efd;
+}
+.menu {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 h3 {
   margin: 40px 0 0;
@@ -60,9 +105,12 @@ ul {
 }
 li {
   display: inline-block;
-  margin: 0 10px;
 }
-a {
-  color: #42b983;
+#search {
+  display: flex;
+  align-items: center;
+}
+#search .text{
+  margin: 0 10px ;
 }
 </style>

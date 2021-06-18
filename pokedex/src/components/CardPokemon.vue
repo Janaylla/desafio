@@ -40,17 +40,9 @@ export default {
       type: String,
       required: true,
     },
-    updatedPokedex: {
-      type: Function,
-      required: false,
-    },
     pokemonSelected: {
       type: String,
-      required: true,
-    },
-    level: {
-      type: Number,
-      required: true,
+      required: false,
     }
   },
   data() {
@@ -64,15 +56,12 @@ export default {
           this.pokemon.imgUrl =
             res.data.sprites.versions["generation-v"]["black-white"].animated
               .front_default || res.data.sprites.front_default;
-          console.log(res.data.sprites.front_default);
-
-          this.pokemon.name = this.name;
+                 this.pokemon.name = this.name;
           this.selected = this.pokemon.pokemonSelected === this.pokemonSelected;
           apiPokedeks
-            .get(`/existsPokedex/Janaylla/${this.name}`)
+            .get(`/existsPokedex/${this.name}`)
             .then((res) => {
               this.pokemon.pokedex = res.data.exist;
-              this.updatedPokedex();
             });
         });
       },
@@ -82,7 +71,7 @@ export default {
     editPokedex: function () {
       this.setPokemon();
       apiPokedeks
-        .put(`/pokedex/Janaylla/${this.name}`)
+        .put(`/pokedex/${this.name}`)
         .then(() => {
           this.setPokemon();
         })

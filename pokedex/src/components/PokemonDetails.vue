@@ -19,47 +19,65 @@
           <h4>Height:</h4>
           <h5>{{ pokemon.height / 10 }} m</h5>
         </li>
+        <li>
+          <b-button
+            pill
+            v-on:click="editPokedex"
+            :variant="pokemon.pokedex ? 'danger' : 'outline-danger'"
+          >
+            {{ pokemon.pokedex ? "Remover" : "Adicionar" }}
+          </b-button>
+        </li>
       </ul>
     </div>
     <div class="details">
       <div class="list">
-        <ul>
-          <li>
-            <h4>Tipes</h4>
-            <div class="type">
-              <b-button
-                v-for="(type, index) in pokemon.types"
-                :key="`type${+index}`"
-                pill
-                disabled
-                :class="`${type.type.name} button`"
-                size="sm"
-              >
-                {{ type.type.name }}
-              </b-button>
-            </div>
-          </li>
-
-          <li>
-            <h4>Abilities</h4>
-            <div class="abilities">
-              <b-button
-                v-for="(ability, index) in pokemon.abilities"
-                :key="`type${+index}`"
-                class="button"
-                pill
-                disabled
-                size="sm"
-                variant="outline-danger"
-              >
-                {{ ability.ability.name }}</b-button
-              >
-            </div>
-          </li>
-        </ul>
+        <h4>Tipes</h4>
+        <div class="type">
+          <b-button
+            v-for="(type, index) in pokemon.types"
+            :key="`type${+index}`"
+            pill
+            disabled
+            :class="`${type.type.name} button`"
+            size="sm"
+          >
+            {{ type.type.name }}
+          </b-button>
+        </div>
+        <h4>Abilities</h4>
+        <div class="abilities">
+          <b-button
+            v-for="(ability, index) in pokemon.abilities"
+            :key="`ability${index}`"
+            class="button"
+            pill
+            size="sm"
+            :variant="pokemon.pokemonsAbilitySelectd ===  ability.ability.name?'danger':'outline-danger'"
+            v-on:click="
+              () =>
+                getSpecieByAbilite(ability.ability.url, ability.ability.name)
+            "
+          >
+            {{ ability.ability.name }}</b-button
+          >
+        </div>
+        <div class="pokes">
+          <CardPokeEvolutin
+            v-for="(pokemon, index) in pokemon.pokemonsAbility"
+            :updatedPokedex="updatedPokedex"
+            :key="`pokemon${index}`"
+            :name="pokemon.pokemon.name"
+            :pokemonSelected="name"
+          />
+        </div>
         <div>
           <h4>States</h4>
-          <div v-for="(stat, index) in pokemon.stats" :key="stat" class="stats">
+          <div
+            v-for="(stat, index) in pokemon.stats"
+            :key="`stat${index}`"
+            class="stats"
+          >
             <div>
               <span>{{ stat.stat.name }}</span
               ><span>{{ stat.base_stat }}</span>
@@ -67,7 +85,7 @@
             <div>
               <b-progress
                 :value="stat.base_stat / 2"
-                :key="index"
+                :key="`stat${index}`"
                 :animated="true"
                 variant="danger"
               ></b-progress>
@@ -81,7 +99,7 @@
               <CardPokeEvolutin
                 v-for="(pokemon, index) in pokemon.pokemonsEvolutin"
                 :updatedPokedex="updatedPokedex"
-                :key="index"
+                :key="`pokemon${index}`"
                 :name="pokemon.name"
                 :pokemonSelected="name"
                 :level="pokemon.level"
@@ -91,13 +109,6 @@
         </div>
       </div>
     </div>
-     <b-button
-      pill
-      v-on:click="editPokedex"
-      :variant="pokemon.pokedex ? 'danger' : 'outline-danger'"
-    >
-      {{ pokemon.pokedex ? "Remover" : "Adicionar" }}
-    </b-button>
   </div>
 </template>
 
@@ -168,7 +179,9 @@ export default {
         pokedex: true,
         id: 0,
         pokemonsEvolutin: [],
+        pokemonsAbility: [],
         textid: "000",
+        pokemonsAbilitySelectd: "",
       },
       setPokemon: function () {
         apiPokemons.get(`/pokemon/${this.name}`).then((res) => {
@@ -183,12 +196,12 @@ export default {
               .front_default || res.data.sprites.front_default;
           types = res.data.types;
           abilities = res.data.abilities;
+          console.log(res.data.abilities);
           stats = res.data.stats;
 
           if (id > 100) textid = `${id}`;
           else if (id > 10) textid = `0${id}`;
           else textid = `00${id}`;
-          console.log(res.data);
           this.pokemon = {
             ...this.pokemon,
             height,
@@ -201,12 +214,10 @@ export default {
             textid,
           };
         });
-         apiPokedeks
-            .get(`/existsPokedex/Janaylla/${this.name}`)
-            .then((res) => {
-              this.pokemon.pokedex = res.data.exist;
-              this.updatedPokedex();
-            });
+        apiPokedeks.get(`/existsPokedex/${this.name}`).then((res) => {
+          this.pokemon.pokedex = res.data.exist;
+          this.updatedPokedex();
+        });
       },
       getSpecie: function (id) {
         apiPokemons.get(`/pokemon-species/${id}`).then((res) => {
@@ -218,32 +229,41 @@ export default {
         });
       },
       getEvolution: function (id) {
-        console.log(`/evolution_chain/${id}`);
         apiPokemons.get(`/evolution-chain/${id}`).then((res) => {
           const pokemoonsEvolutin = [];
-          console.log(res.data.chain);
           let poke = res.data.chain;
           while (poke) {
-            pokemoonsEvolutin.push({...poke.species, level:pokemoonsEvolutin.length+1});
+            pokemoonsEvolutin.push({
+              ...poke.species,
+              level: pokemoonsEvolutin.length + 1,
+            });
             poke = poke["evolves_to"] ? poke["evolves_to"][0] : false;
           }
           this.pokemon.pokemonsEvolutin = pokemoonsEvolutin;
-          console.log(pokemoonsEvolutin[0].name);
         });
+      },
+      getSpecieByAbilite: function (url, name) {
+        const idAbility = url.replace("https://pokeapi.co/api/v2/ability/", "");
+        console.log(idAbility);
+        if (name === this.pokemon.pokemonsAbilitySelectd) {
+          this.pokemon.pokemonsAbilitySelectd = "";
+          this.pokemon.pokemonsAbility = [];
+        } else {
+          apiPokemons.get(`/ability/${idAbility}`).then((res) => {
+            console.log(res.data.pokemon[0].pokemon.name);
+            this.pokemon.pokemonsAbility = res.data.pokemon;
+          });
+          this.pokemon.pokemonsAbilitySelectd = name;
+        }
       },
     };
   },
   methods: {
     editPokedex: function () {
       this.setPokemon();
-      apiPokedeks
-        .put(`/pokedex/Janaylla/${this.name}`)
-        .then(() => {
-          this.setPokemon();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      apiPokedeks.put(`/pokedex/${this.name}`).then(() => {
+        this.setPokemon();
+      });
     },
   },
   beforeMount() {
@@ -261,27 +281,12 @@ export default {
   align-items: center;
   flex-direction: column;
   padding: 20px;
+  width: 100%;
 }
 .details {
   display: flex;
 }
-.list ul {
-  display: flex;
-  flex-direction: column;
-  width: 700px;
-}
-.list ul li {
-  display: flex;
-  align-items: center;
 
-  flex-direction: column;
-}
-.list ul li div {
-  flex-direction: row;
-}
-.list ul li h4 {
-  width: 100%;
-}
 h4 {
   font-size: 20px;
   font-weight: 600;
@@ -312,7 +317,7 @@ h5 {
   align-items: center;
   justify-content: center;
   border: 1px grey solid;
-  
+
   -webkit-box-shadow: 0px 0px 15px 15px rgba(255, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 15px 15px rgba(255, 0, 0, 0.75);
   box-shadow: 0px 0px 15px 15px rgba(255, 0, 0, 0.75);
@@ -329,12 +334,13 @@ h5 {
   width: 100%;
   margin: 40px 0;
 }
-.pokes,
-.type,
-.abilities {
+.pokes{
   display: flex;
   justify-content: center;
   margin: 10px 0;
+  flex-wrap: wrap;
+  width: 800px;
+  max-width: 90%;
 }
 .stats {
   width: 100%;
