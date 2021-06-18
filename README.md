@@ -4,7 +4,7 @@
 1. Clonar o projeto para sua maquina
 2. Abrir 2 terminais
 3. Com o primeiro navegar até a pasta back e inserir o comando: npm run dev
-4. No segundo navegar até a pasta pokedex e insirir o comando: npm run server
+4. No segundo navegar até a pasta pokedex e inserir o comando: npm run server
 5. Abrie no seu navegador: http://localhost:8080/
 
 ### Funcionalidades
