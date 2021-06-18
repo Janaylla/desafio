@@ -1,0 +1,17 @@
+###
+GET http://localhost:3003/ping
+
+###
+PUT  http://localhost:3003/user
+Content-Type: application/json
+
+{
+    "userName": "Janaylla", 
+    "password": "123456"
+}
+
+###
+PUT http://localhost:3003/pokedex/JanayllaF/Testeaa
+
+###
+GET http://localhost:3003/pokedex/JanayllaF
