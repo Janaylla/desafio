@@ -12,7 +12,12 @@ function updateUsers(){
         if (err) {
             console.log(err);
         } else {
-            users = JSON.parse(data);
+            try {
+                JSON.parse(data)
+                users = JSON.parse(data);
+            } catch (e) {
+                return false;
+            }
         }
     });
 }
@@ -23,7 +28,6 @@ function updateArrayUsers(users: user[]): void {
 
     fs.writeFile ("./src/users.json", JSON.stringify(users), function(err:any) {
         if (err) throw err;
-        console.log('complete');
         }
     );
 }
@@ -46,11 +50,10 @@ app.post(("/singup"), (req: Request, res: Response) => {
     users.push({
         userName, password, pokedex:[]
     })
-    const token = generateToken({userName})
     updateArrayUsers(users)
+    const token = generateToken({userName})
     res.status(200).send({token})
 })
-
 app.post(("/login"), (req: Request, res: Response) => {
     updateUsers()
     const {userName, password} = req.body;
@@ -75,7 +78,7 @@ app.get("/existsPokedex/:pokemon", (req: Request, res: Response) => {
     if(typeof(token) !== "string"){
         res.status(400).send("Error")
     }
-    const {userName} = getData(token as string);
+    const {userName} = getData(typeof(token) === "string" ?token:"");
 
     const pokemon = req.params.pokemon;
    if(!userName || !pokemon){
@@ -92,37 +95,31 @@ app.get("/existsPokedex/:pokemon", (req: Request, res: Response) => {
    })
    res.status(200).send({exist: indexPokemon !== -1})
 })
-
 app.get("/pokedex", (req: Request, res: Response) => {
     updateUsers()
     const token  = req.headers.authorization;
-    if(typeof(token) !== "string"){
+    if(typeof(token) != "string"){
         res.status(400).send("Error")
     }
-    console.log("oii")
-    const {userName} = getData(token as string);
+    const {userName} = getData(typeof(token) === "string" ?token:"");
     if(!userName){
         res.status(400).send("Error")
     }
     const index = users.findIndex((user:user) => {
         return user.userName === userName;
     })
-    console.log("oii")
     if(index === -1){
         res.status(400).send("Error")
     }
-    console.log("oii")
     res.status(200).send({pokemons: users[index].pokedex})
 })
-
-
 app.put("/pokedex/:pokemon", (req: Request, res: Response) => {
     updateUsers()
     const token  = req.headers.authorization;
-    if(typeof(token) !== "string"){
+    if(typeof(token) === "string"){
         res.status(400).send("Error")
     }
-    const {userName} = getData(token as string);
+    const {userName} = getData(typeof(token) === "string" ?token:"");
 
      const pokemon = req.params.pokemon;
     if(!userName || !pokemon){

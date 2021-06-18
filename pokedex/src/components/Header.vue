@@ -4,23 +4,24 @@
     <div id="nav">
       <b-navbar type="danger" variant="danger">
         <b-navbar-nav class="menu">
-          <b-nav-item href="/"
-            ><b-button class="navButton" variant="outline-primary">
+          <b-nav-item href="/" v-if="page === 'pokedex'"
+            ><b-button class="navButton" id="house-door" variant="outline-primary">
               <b-icon icon="house-door"></b-icon>
             </b-button>
           </b-nav-item>
-          <div v-if="page === 'home'">
-            <b-nav-item>
-              <div>
+          <div v-else></div>
+
+          <div v-if="page === 'home'" >
+            <b-nav-item id="navHome">
                 <div id="search">
                   <b-form-input
                     v-model="search"
                     placeholder="Name or ID"
                     class="text"
                   ></b-form-input>
+
                   <b-icon icon="search" class="icon" v-on:click="() => onClickSearch(0, search)"></b-icon>
                 </div>
-              </div>
             </b-nav-item>
             <b-nav-item >
               <b-button
@@ -40,7 +41,6 @@
                 class="navButton"
               >
                 <b-icon icon="circle-square"></b-icon> Pokemons
-                capturados
               </b-button>
             </b-nav-item>
           </div>
@@ -76,6 +76,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 #nav {
   position: fixed;
   width: 100%;
@@ -112,5 +113,14 @@ li {
 }
 #search .text{
   margin: 0 10px ;
+}
+@media only screen and (max-width: 600px) {
+  #navHome{
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  .notShow{
+    display: none;
+  }
 }
 </style>

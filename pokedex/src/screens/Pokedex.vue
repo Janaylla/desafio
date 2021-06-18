@@ -2,7 +2,6 @@
   <div id="app">
     <Header page="pokedex"/>
     <div>
-            
       <b-sidebar
         backdrop-variant="dark"
         id="sidebar-right"
@@ -108,6 +107,7 @@ export default {
   display: flex;
   flex-grow: 1;
   align-items: center;
+  width: 100%;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

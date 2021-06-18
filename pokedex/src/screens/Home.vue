@@ -156,4 +156,11 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.ul *{
+  list-style: none;
+  
+}
+.ul li button{
+  width: 100%;
+}
 </style>

@@ -2,9 +2,15 @@
   <div id="todo">
   <div id="login">
       <h3>Faça seu login/cadastro para acessar a pokedex, você só precisa de um nome de usurio e uma senha</h3>
-   <b-form-input v-on:click="login" v-model="userName" placeholder="Enter your userName"></b-form-input>
-   <b-form-input v-model="password" placeholder="Enter your password"></b-form-input>
-  <b-button pill   variant="primary">Login/Cadastrar</b-button>
+   <b-form-input v-model="userName" placeholder="Your userName"></b-form-input>
+   <b-form-input v-model="password" placeholder="Your password"></b-form-input>
+   <div id="buttons">
+  <b-button pill variant="primary" v-on:click="login" >Login</b-button>
+  <b-button pill variant="primary" v-on:click="singup" >Cadastrar</b-button>
+
+  <b-spinner v-if="loading" variant="primary"></b-spinner>
+   </div>
+  
   </div>
     </div>
 </template>
@@ -30,27 +36,43 @@ export default {
   data() {
       return {
           userName: '',
-          password: ''
+          password: '',
+          loading: false
       }
   },
   methods: {
       login: function(){
+          this.loading = true;
           const body = {userName: this.userName, password: this.password};
-          apiPokedeks.post("/singup", body).then((res) => {
-            
-              console.log(res)
+          apiPokedeks.post("/login", body).then((res) => {
               window.localStorage.setItem('token', res.data.token)
               window.location.href = '/'
-          }).catch((erro) => {
-              console.log(erro)
+          }).catch(() => {
+              this.loading = false;
           })
-      }
+      },
+      singup:  function(){
+          this.loading = true;
+          const body = {userName: this.userName, password: this.password};
+          apiPokedeks.post("/singup", body).then((res) => {
+              window.localStorage.setItem('token', res.data.token)
+              window.location.href = '/'
+          }).catch(() => {
+              this.loading = false;
+          })
+      },
   }
 };
 </script>
 
 <style scope>
-
+#buttons{
+    display: flex;
+    align-items: center;
+}
+#buttons button{
+    margin: 10px;
+}
 #todo {
     display: flex;
     width: 100%;
@@ -59,7 +81,8 @@ export default {
     align-items: center;
 }
 #login{
-    width: 500px;
+    max-width: 500px;
+    width: 80%;
     padding: 20px;
     display: flex;
     flex-direction: column;

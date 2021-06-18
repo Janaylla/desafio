@@ -1,6 +1,7 @@
 
 <template>
-  <div id="'card'+this.name" class="pokemon">
+<div>
+  <div v-if="name" class="pokemon">
     <h1 id="title">{{ name }}</h1>
     <div class="informationBasics">
       <div class="img">
@@ -110,6 +111,10 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    Parece que você não capturou nenhum pokemon
+  </div>
+</div>
 </template>
 
 <script>
@@ -185,6 +190,7 @@ export default {
       },
       setPokemon: function () {
         apiPokemons.get(`/pokemon/${this.name}`).then((res) => {
+          if(this.name){
           let { height, weight, imgUrl, types, abilities, stats, id, textid } =
             this.pokemon;
           this.getSpecie(res.data.id);
@@ -213,6 +219,7 @@ export default {
             id,
             textid,
           };
+          }
         });
         apiPokedeks.get(`/existsPokedex/${this.name}`).then((res) => {
           this.pokemon.pokedex = res.data.exist;
@@ -301,23 +308,26 @@ h5 {
   align-items: center;
   justify-items: center;
   margin: 30px;
+  width: auto;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
 .informationBasics ul {
   display: flex;
   flex-direction: column;
-  width: 100%;
 }
 .informationBasics ul li {
   display: flex;
 }
-.img {
-  width: 400px !important;
+
+.informationBasics .img {
+  width: 200px !important;
   height: 200px !important;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px grey solid;
-
+  margin: 20px;
   -webkit-box-shadow: 0px 0px 15px 15px rgba(255, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 15px 15px rgba(255, 0, 0, 0.75);
   box-shadow: 0px 0px 15px 15px rgba(255, 0, 0, 0.75);
@@ -339,8 +349,7 @@ h5 {
   justify-content: center;
   margin: 10px 0;
   flex-wrap: wrap;
-  width: 800px;
-  max-width: 90%;
+  width: 90%;
 }
 .stats {
   width: 100%;
